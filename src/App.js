@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from './componentes/Header';
 import Formulario from './componentes/Formulario';
+import Resultado from './componentes/Resultado';
 import axios from 'axios';
 
 class App extends Component {
@@ -51,6 +52,10 @@ class App extends Component {
             <Formulario
               monedas={this.state.monedas}
               obtenerValoresCrypto={this.obtenerValoresCrypto}
+            />
+            <Resultado 
+              cotizacion={this.state.cotizacion}
+              monedaCotizada={this.state.monedaCotizada}
             />
           </div>
         </div>
