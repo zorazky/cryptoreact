@@ -5,7 +5,9 @@ import axios from 'axios';
 
 class App extends Component {
   state = {
-    monedas: []
+    monedas: [],
+    cotizacion: {},
+    monedaCotizada: ''
   }
   async componentDidMount() {
     this.obtenerMonedas();
@@ -24,6 +26,21 @@ class App extends Component {
       })
   }
 
+  obtenerValoresCrypto = async (monedas) => {
+    const {moneda, crypto} = monedas;
+
+    const url = `https://api.coinmarketcap.com/v2/ticker/${crypto}/?convert=${moneda}`;
+
+    await axios.get(url)
+      .then(respuesta => {
+        this.setState({
+          cotizacion: respuesta.data.data,
+          monedaCotizada: moneda
+        })
+      })
+    
+  }
+
   render() {
     return (
       <div className="container">
@@ -33,6 +50,7 @@ class App extends Component {
           <div className="col-md-6 bg-light pb-4 contenido-principal">
             <Formulario
               monedas={this.state.monedas}
+              obtenerValoresCrypto={this.obtenerValoresCrypto}
             />
           </div>
         </div>
