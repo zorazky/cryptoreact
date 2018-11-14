@@ -8,7 +8,8 @@ class App extends Component {
   state = {
     monedas: [],
     cotizacion: {},
-    monedaCotizada: ''
+    monedaCotizada: '',
+    cargando: false
   }
   async componentDidMount() {
     this.obtenerMonedas();
@@ -35,14 +36,34 @@ class App extends Component {
     await axios.get(url)
       .then(respuesta => {
         this.setState({
-          cotizacion: respuesta.data.data,
-          monedaCotizada: moneda
+          cargando: true
         })
+        setTimeout(() => {
+          this.setState({
+            cotizacion: respuesta.data.data,
+            monedaCotizada: moneda,
+            cargando: false
+          })
+        }, 3000);
       })
     
   }
 
   render() {
+    const cargando = this.state.cargando;
+    let resultado;
+    if(cargando) {
+      resultado = <div className="spinner">
+                      <div className="bounce1"></div>
+                      <div className="bounce2"></div>
+                      <div className="bounce3"></div>
+                  </div>
+    } else {
+      resultado = <Resultado 
+                      cotizacion={this.state.cotizacion}
+                      monedaCotizada={this.state.monedaCotizada}
+                  />
+    }
     return (
       <div className="container">
         <Header titulo="Cotiza Criptomonedas al instante" />
@@ -53,10 +74,7 @@ class App extends Component {
               monedas={this.state.monedas}
               obtenerValoresCrypto={this.obtenerValoresCrypto}
             />
-            <Resultado 
-              cotizacion={this.state.cotizacion}
-              monedaCotizada={this.state.monedaCotizada}
-            />
+            {resultado}
           </div>
         </div>
       </div>
